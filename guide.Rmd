@@ -1,0 +1,36 @@
+
+# Set up
+
+This is analysis is set up to perform a simple comparision of the value of accepting a scholarship to play soccer a top university relative to skipping college to play in a hypothetical professional development situation.  The analysis compares two decision points that I call "college" and "no college."  The analysis proceeds in two related but distinct segments:
+
+## The short run analysis
+In the first part of the script I compare the earnings of the college/no college decision over a 14 year time horizon.  This time horizon includes 4 years in either a professional soccer development environment or college and 10 years in either the MLS or in the workforce.
+
+### Parameters of the short run analysis
+
+The basic parameters of the analysis are as follows:
+
+- average starting salary for a UC Berkely graduate (s.CAL): initialized to $60,400
+- average starting salary for a worker without a college degree (s.NC): initialized to 0.62*60,400
+- starting salary for the MLS contract (s.MLS): initialized to $91,000 based on the current median salary in the MLS
+- annual salary growth: initialized to 8% for non-MLS jobs (g.NC, g.B) and 10% for the MLS contract (g.MLS)
+- the rate at which future earnings are discounted to present value (beta): initialized to 0.95
+- the time horizon of the analysis (T): initialized to 14 years (4 years of college or professional soccer development + 10 years of work)
+- the salary cap (cap): this is initialized to be $150,000 for the non-MLS work paths and $1,000,000 for the MLS path
+
+In addition to these basic parameters there are some parameters we will monkey around with in the short-run analysis:
+
+- p.CAL: the probability of getting an MLS contract if the college option is chosen - initalized to 50%
+- p.prem: the probability premium of getting an MLS contract if the no college option is chosen.
+
+## The long run analysis
+The second section of the script produces a longer run analysis over a 25 year time horizon.  This time horizon is the same as the short run analysis in years 1 - 15.  In year 16, because the player will have 10 years experience at this point (either in the MLS or in the workforce) I make the following assumptions: 
+
+- if the player chose the college option then in year 16 he start out with a salary equal to the 10 year salary for college educated workers
+- if the player chose the no college option then in year 16 he start out with a salary equal to the 10 year salary for high school educated workers 
+- the growth rate in earnings for the Berkeley educated/non-MLS worker is 1.5 times the earnings growth for the no college/non-MLS option 
+- the Berkeley educated worker is capped at $150,000 in annual salary
+
+Note that in the long-run analysis we add a column to the original data frame for the year 16 starting salary (the year that MLS players in the model rejoin the workforce).  The assumptions listed above concerning what happens to an individuals after thier professional career is over are embedded in this year 16 salary...these can be changed if one wants to impose different assumptions on this peice of the analysis.
+
+
