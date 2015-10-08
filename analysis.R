@@ -113,9 +113,13 @@ EV.sim <- function(p.add){
 }
 
 df.prem <- data.frame(rbindlist(lapply(seq(from=0,to=0.2,by=0.01),EV.sim)))
-ggplot(df.prem,aes(x=prem,y=val,color=path))+geom_line()+geom_point() + theme_bw()
+ggplot(df.prem,aes(x=prem,y=val/100000,color=path))+geom_line()+geom_point() + 
+    ylab("NPV ($100,000)") + xlab("probability premium") + theme_bw()
 
-
+png(file="U:/personal/mls_plot1.jpg",width=400,height=400)
+ggplot(df.prem,aes(x=prem,y=val/100000,color=path))+geom_line()+geom_point() + 
+  ylab("NPV ($100,000)") + xlab("probability premium") + theme_bw()
+dev.off()
 
 #########################################################################
 #########################################################################
@@ -157,21 +161,23 @@ ggplot(df.prem,aes(x=prem,y=val,color=path))+geom_line()+geom_point() + theme_bw
 # make a few changes to the base data frame
 df$growth <- c(1.052,1.1,1.08,1.1)
 
-df$year16 <- 0
-df$year16[df$path==1] <- df$year5[df$path==1]*(df$growth[df$path==1])^10
+df$year15 <- 0
+df$year15[df$path==1] <- df$year5[df$path==1]*(df$growth[df$path==1])^10
 
 #we assume that once the 10 year MLS career is over the player's year 16
 # starting salary is as if he were a high school educated worker with 10 years
 # work experience
-df$year16[df$path==2] <- df$year5[df$path==1]*(df$growth[df$path==1])^10
+
+df$year15[df$path==2] <- df$year5[df$path==1]*(df$growth[df$path==1])^10
+#df$year16[df$path==2] <- 80000
 
 #the year 15 salary for a Cal grad is just the continuation of his prior 
 # earnings growth
-df$year16[df$path==3] <- df$year5[df$path==3]*(df$growth[df$path==3])^10
+df$year15[df$path==3] <- df$year5[df$path==3]*(df$growth[df$path==3])^10
 
 #the year 15 salary for a Cal grad who player 10 years in the MLS is
 # equal to the year 11 salary for a Cal grad with 10 years experience
-df$year16[df$path==4] <- df$year5[df$path==3]*(df$growth[df$path==3])^10
+df$year15[df$path==4] <- df$year5[df$path==3]*(df$growth[df$path==3])^10
 
 #amend the npv calculation sligthly to introduce the proper starting
 # salary at the termination of the 10 year MLS contract.  Also, imposing the cap
@@ -180,10 +186,10 @@ val <- function(path){
   E <- data.frame(rbindlist(lapply(c(1:T),function(t){
     if(t<5){
       v <- df$year1[df$path==path]
-    }else if(t>=5 & t<=15){
+    }else if(t>=5 & t<15){
       v <- (df$year5[df$path==path] * (df$growth[df$path==path]^(t-5))) 
     }else{
-      v <- min(df$cap[df$path==path],(df$year16[df$path==path]*(df$growth[df$path==path]^(t-16))))
+      v <- min(df$cap[df$path==path],(df$year15[df$path==path]*(df$growth[df$path==path]^(t-15))))
     }
     return(data.frame(v=v))
   })))
@@ -227,8 +233,10 @@ EV.sim <- function(p.add){
 }
 
 df.prem <- data.frame(rbindlist(lapply(seq(from=0,to=0.5,by=0.02),EV.sim)))
-ggplot(df.prem,aes(x=prem,y=val,color=path))+geom_line()+geom_point() + theme_bw()
-
+png(file="U:/personal/mlsplot2.png",width=400,height=400)
+ggplot(df.prem,aes(x=prem,y=val/100000,color=path))+geom_line()+geom_point() + 
+  ylab("NPV ($100,000)") + xlab("probability premium") + theme_bw()
+dev.off()
 
 
 
